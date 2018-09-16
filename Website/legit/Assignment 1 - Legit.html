@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<!-- saved from url=(0068)https://cgi.cse.unsw.edu.au/~cs2041/18s2/assignments/ass1/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<title>
+
+Assignment 1 - Legit
+
+</title>
+
+
+
+
+<!-- <link href="/~cs2041/18s2/flask.cgi/static/bootstrap.min.css" rel="stylesheet"> -->
+<link rel="stylesheet" href="./files/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link href="./files/course.css" rel="stylesheet">
+<!-- <script type="text/javascript" src="/~cs2041/18s2/flask.cgi/static/jquery.min.js"></script> -->
+<!-- <script type="text/javascript" src="/~cs2041/18s2/flask.cgi/static/bootstrap.min.js"></script> -->
+<script src="./files/jquery-3.3.1.min.js"></script>
+<script src="./files/popper.min.js"></script>
+<script src="./files/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript" src="./files/course.js"></script>
+
+<!-- prism code-highligting -->
+<link href="./files/prism.css" rel="stylesheet">
+<!-- defer loading of prism.js script until DOM is loaded, as per PR #26 and https://stackoverflow.com/a/24070373 -->
+<script type="text/javascript" src="./files/prism.js" defer=""></script>
+
+<link rel="canonical" href="https://cgi.cse.unsw.edu.au/~cs2041/18s2/">
+</head>
+<body class="container">
+
+
+
+
+<div id="heading" class="row">
+
+
+<div class="col-3 text-left">
+<a class="heading_link" target="_blank" id="left_heading_link" href="https://cgi.cse.unsw.edu.au/~cs2041/18s2/">COMP[29]041 18s2</a>
+</div>
+
+<div class="col-6 text-center">
+
+
+Assignment 1 - Legit
+
+
+</div>
+
+<div class="col-3 text-right">
+<a class="heading_link" target="_blank" id="right_heading_link" href="https://cgi.cse.unsw.edu.au/~cs2041/18s2/">COMP[29]041 18s2</a>
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p class="text-right text-muted"><small>
+version: 1.3 
+last updated: 2018-09-16 25:10
+</small></p>
+
+<h2>Aims</h2>
+<p>
+This assignment aims to give you
+</p><ul>
+<li> practice in Perl programming generally
+</li><li> introduce you to git  &amp; give you a clear concrete understanding of its basic semantics
+</li></ul>
+<p>
+<b>Note:</b> the material in the lecture notes will not be sufficient
+by itself to allow you to complete this assignment.
+You may need to search on-line documentation for Perl, git etc.
+Being able to search documentation efficiently for the information you need is a
+<em>very</em> useful skill for any kind of computing work.
+
+</p><h2>Introduction</h2>
+
+Your task in this assignment is to write a Perl program <b>legit.pl</b> which
+implements a subset of the version control system <a href="https://en.wikipedia.org/wiki/Git">Git</a>
+<p>
+Git is a very complex program which has many individual commands.
+You will implement only a few of the most important commands.
+</p><p>
+You will be given a number of simplifying assumptions which make your task easier.
+
+</p><h2>Reference implementation</h2>
+
+Many aspects of this assignment are not fully specified in this document.
+<p>
+Instead you must match the behaviour of a reference implementation - <b>/home/cs2041/bin/legit</b>.
+</p><p>
+Provision of a reference implementation is a common method to provide an operational specification,
+and its something you will likely need to do after you leave UNSW.
+</p><p>
+Discovering &amp; matching the reference implementation's behaviour is deliberately part of the assignment.
+</p><p>
+Your Perl script <b>legit.pl</b> should match the behaviour of <b>/home/cs2041/bin/legit</b> exactly, including for example
+producing the same error messages.
+</p><p>
+The reference implementation is a wrapper around git, so tutorials for the equivalent git commands
+will help you understand the reference implementation.
+For example this <a href="https://vimeo.com/163127177">Meet Git video</a> from Atlassian:
+</p><p>
+<iframe allowfullscreen="" frameborder="0" height="360" mozallowfullscreen="" src="./files/163127177.html" webkitallowfullscreen="" width="640"></iframe>
+</p><p>
+While the code in the reference implementation is fairly straight forward,
+reverse-engineering its behaviour is obviously not so simple and it's a nice example of how coming to grips
+with the precise semantics of an apparently obvious task can still be challenging.
+</p><p>
+If you discover what you believe to be a bug in the reference implementation, report it in the class forum.
+Andrew may fix the bug or indicate that you do not need to match the reference implementation's
+behaviour in this case.
+
+</p><h2>Legit Commands  - Subset 0</h2>
+<h4>legit.pl init</h4>
+
+The <b>init</b> command creates an empty Legit repository.
+<p>
+<b>legit.pl</b> should create a directory named <b>.legit</b> which it will use to store the repository.
+</p><p>
+It should produce an error message if this directory already exists.  You should match this and other error messages exactly. For example:
+
+
+    
+        
+    
+
+
+
+
+
+</p><pre class="command_line" style="max-height: 32em;overflow:  auto;"><kbd class="shell">ls -d .legit</kbd>
+ls: cannot access .legit: No such file or directory
+<kbd class="shell">./legit.pl init</kbd>
+Initialized empty legit repository in .legit
+<kbd class="shell">ls -d .legit</kbd>
+.legit
+<kbd class="shell">./legit.pl init</kbd>
+legit.pl: error: .legit already exists
+</pre>
+
+<b>legit.pl</b>  may create initial files or directories inside <b>.legit</b>.
+<p>
+You do not have to use a particular representation to store the repository.
+</p><p>
+You do not have to create the same files or directory inside <b>.legit</b> as the reference implementation.
+
+
+</p><h4>legit.pl add <i>filenames</i></h4>
+
+The <b>add</b> command adds the contents of one or more files to the "<b>index</b>".
+<p>
+Files are added to the repository in a two step process.
+The first step is adding them to the index.
+</p><p>
+You will need to store files in the index somehow in the <b>.legit</b> sub-directory.
+For example you might choose store them in a sub-directory of <b>.legit</b>.
+</p><p>
+Only ordinary files in the current directory can be added, and their names will always
+start with an alphanumeric character ([a-zA-Z0-9]) and will only contain alpha-numeric characters plus '.', '-' and '_' characters.
+</p><p>
+The <b>add</b> command, and other <b>legit.pl</b> commands, will not be given pathnames with slashes.
+
+</p><h4>legit.pl commit -m <i>message</i></h4>
+
+The <b>legit.pl commit</b> command saves a copy of all files in the index to the repository.
+<p>
+A message describing the commit must be included as part of the commit command.
+</p><p>
+<b>legit.pl</b> commits are numbered (not hashes like git).  You must match the numbering scheme.
+</p><p>
+You can assume the commit message is ASCII and does not contain new-line characters.
+
+</p><h4>legit.pl log</h4>
+<b>legit.pl</b> <b>log</b> prints one line for every commit that has been made to the repository.
+<p>
+Each line should contain the commit number and the commit message.
+
+</p><h4>legit.pl show commit:filename</h4>
+<b>legit.pl</b> <b>show</b> should print the contents of the specified file as of the specified commit.
+<p>
+If the commit is omitted the contents of the file in the index should be printed.
+</p><p>
+For example:
+
+
+
+
+</p><pre class="command_line" style="max-height: 32em;overflow:  auto;"><kbd class="shell">./legit.pl init</kbd>
+Initialized empty legit repository in .legit
+<kbd class="shell">echo line 1 &gt; a</kbd>
+<kbd class="shell">echo hello world &gt;b</kbd>
+<kbd class="shell">./legit.pl add a b</kbd>
+<kbd class="shell">./legit.pl commit -m 'first commit'</kbd>
+Committed as commit 0
+<kbd class="shell">echo  line 2 &gt;&gt;a</kbd>
+<kbd class="shell">./legit.pl add a</kbd>
+<kbd class="shell">./legit.pl commit -m 'second commit'</kbd>
+Committed as commit 1
+<kbd class="shell">./legit.pl log</kbd>
+1 second commit
+0 first commit
+<kbd class="shell">echo line 3 &gt;&gt;a</kbd>
+<kbd class="shell">./legit.pl add a</kbd>
+<kbd class="shell">echo line 4 &gt;&gt;a</kbd>
+<kbd class="shell">./legit.pl show 0:a</kbd>
+line 1
+<kbd class="shell">./legit.pl show 1:a</kbd>
+line 1
+line 2
+<kbd class="shell">./legit.pl show :a</kbd>
+line 1
+line 2
+line 3
+<kbd class="shell">cat a</kbd>
+line 1
+line 2
+line 3
+line 4
+<kbd class="shell">./legit.pl show 0:b</kbd>
+hello world
+<kbd class="shell">./legit.pl show 1:b</kbd>
+hello world
+</pre>
+<h2>Legit Commands - Subset 1</h2>
+
+Subset 1 is more difficult and you will need spend some time understanding the semantics (meaning) of these operations
+by running the reference implementation or researching the equivalent git operations.
+<p>
+Note the assessment scheme recognizes this difficulty.
+
+
+</p><h4>legit.pl commit [-a] -m <i>message</i></h4>
+<b>legit.pl commit</b> can have a <b>-a</b> option which causes all files already  in the index
+to have their  contents from the current directory  added to the index before the commit.
+
+<h4>legit.pl rm [--force] [--cached] <i>filenames</i></h4>
+<b>legit.pl rm</b> removes a file from the current directory or from the  current directory and the index.
+<p>
+If the  <b>--cached</b> option is specified the file is removed only from the index and not from the current directory.
+</p><p>
+<b>legit.pl</b> like <b>git</b> should stop the user accidentally losing work.
+</p><p>
+It should give an error message instead of removing the file in the current directory  if it is different to the last commit.
+</p><p>
+It should also give an error message instead of removing the file from the index if it is different to the last commit.
+</p><p>
+The <b>--force</b> option overrides both these checks.
+
+</p><h4>legit.pl status</h4>
+<b>legit.pl status</b> shows the status of files in the current directory, index, and repository.
+
+
+
+
+
+<pre class="command_line" style="max-height: 32em;overflow:  auto;"><kbd class="shell">./legit.pl init</kbd>
+Initialized empty legit repository in .legit
+<kbd class="shell">touch a b c d e f g h</kbd>
+<kbd class="shell">./legit.pl add a b c d e f</kbd>
+<kbd class="shell">./legit.pl commit -m 'first commit'</kbd>
+Committed as commit 0
+<kbd class="shell">echo hello &gt;a</kbd>
+<kbd class="shell">echo hello &gt;b</kbd>
+<kbd class="shell">echo hello &gt;c</kbd>
+<kbd class="shell">./legit.pl add a b</kbd>
+<kbd class="shell">echo world &gt;a</kbd>
+<kbd class="shell">rm d</kbd>
+<kbd class="shell">./legit.pl rm e</kbd>
+<kbd class="shell">./legit.pl add g</kbd>
+<kbd class="shell">./legit.pl status</kbd>
+a - file modified and changes in index
+b - file modified
+c - changes in index
+d - file deleted
+e - deleted
+f - same as repo
+g - added to index
+h - untracked
+legit.pl - untracked
+</pre>
+<h2>Legit Commands - Subset 2</h2>
+
+Subset 2 is extremely difficult and you will need spend considerable time understanding the semantics of these operations
+by running the reference implementation and researching the equivalent git operations.
+<p>
+Note the assessment scheme recognizes this difficulty.
+
+</p><h4>legit.pl branch [-d] [<i>branch-name</i>]</h4>
+<b>legit.pl branch</b> either creates a branch, deletes a branch or lists current branch names.
+
+<h4>legit.pl checkout <i> branch-name</i></h4>
+<b>legit.pl checkout</b> switches branches.
+<p>
+Note unlike <b>git</b> you can not specify a commit or a file, you can only specify a branch.
+
+</p><h4>legit.pl merge <i>branch-name</i>|<i>commit</i> -m message</h4>
+<b>legit.pl merge -m <i>message</i></b> adds the changes that have been made to specified branch or commit
+to the index and commits them.
+
+
+
+<pre class="command_line" style="max-height: 32em;overflow:  auto;"><kbd class="shell">./legit.pl init</kbd>
+Initialized empty legit repository in .legit
+<kbd class="shell">seq 1 7 &gt;7.txt</kbd>
+<kbd class="shell">./legit.pl add 7.txt</kbd>
+<kbd class="shell">./legit.pl commit -m commit-1</kbd>
+Committed as commit 0
+<kbd class="shell">./legit.pl branch b1</kbd>
+<kbd class="shell">./legit.pl checkout b1</kbd>
+Switched to branch 'b1'
+<kbd class="shell">perl -pi -e 's/2/42/' 7.txt</kbd>
+<kbd class="shell">cat 7.txt</kbd>
+1
+42
+3
+4
+5
+6
+7
+<kbd class="shell">./legit.pl commit -a -m commit-2</kbd>
+Committed as commit 1
+<kbd class="shell">./legit.pl checkout master</kbd>
+Switched to branch 'master'
+<kbd class="shell">cat 7.txt</kbd>
+1
+2
+3
+4
+5
+6
+7
+<kbd class="shell">perl -pi -e 's/5/24/' 7.txt</kbd>
+<kbd class="shell">cat 7.txt</kbd>
+1
+2
+3
+4
+24
+6
+7
+<kbd class="shell">./legit.pl commit -a -m commit-3</kbd>
+Committed as commit 2
+<kbd class="shell">./legit.pl merge b1 -m merge-message</kbd>
+Auto-merging 7.txt
+<kbd class="shell">cat 7.txt</kbd>
+1
+42
+3
+4
+24
+6
+7
+</pre>
+
+
+If a file contains conflicting changes <b>legit.pl merge</b> produces an error message.
+
+
+<pre class="command_line" style="max-height: 32em;overflow:  auto;"><kbd class="shell">./legit.pl init</kbd>
+Initialized empty legit repository in .legit
+<kbd class="shell">seq 1 7 &gt;7.txt</kbd>
+<kbd class="shell">./legit.pl add 7.txt</kbd>
+<kbd class="shell">./legit.pl commit -m commit-1</kbd>
+Committed as commit 0
+<kbd class="shell">./legit.pl branch b1</kbd>
+<kbd class="shell">./legit.pl checkout b1</kbd>
+Switched to branch 'b1'
+<kbd class="shell">perl -pi -e 's/2/42/' 7.txt</kbd>
+<kbd class="shell">cat 7.txt</kbd>
+1
+42
+3
+4
+5
+6
+7
+<kbd class="shell">./legit.pl commit -a -m commit-2</kbd>
+Committed as commit 1
+<kbd class="shell">./legit.pl checkout master</kbd>
+Switched to branch 'master'
+<kbd class="shell">cat 7.txt</kbd>
+1
+2
+3
+4
+5
+6
+7
+<kbd class="shell">perl -pi -e 's/2/24/' 7.txt</kbd>
+<kbd class="shell">cat 7.txt</kbd>
+1
+24
+3
+4
+5
+6
+7
+<kbd class="shell">./legit.pl commit -a -m commit-3</kbd>
+Committed as commit 2
+<kbd class="shell">./legit.pl merge b1 -m merge-message</kbd>
+legit.pl: error: These files can not be merged:
+7.txt
+</pre>
+<h2>Legit - Challenge</h2>
+
+Often commits involve small changes to large files.
+<p>
+Can you use a data representation such that a commit involving a small change to
+a large file uses only small amount of extra space.
+</p><p>
+For consides this example
+
+
+
+</p><pre class="command_line" style="max-height: 32em;overflow:  auto;"><kbd class="shell">./legit.pl init</kbd>
+Initialized empty legit repository in .legit
+<kbd class="shell">seq 1 1000000 &gt;million_line_file.txt</kbd>
+<kbd class="shell">./legit.pl add million_line_file.txt</kbd>
+<kbd class="shell">./legit.pl commit -m commit1</kbd>
+Committed as commit 0
+<kbd class="shell">du -bs .legit</kbd>
+2193700 .legit
+<kbd class="shell">echo extra line &gt;&gt;million_line_file.txt</kbd>
+<kbd class="shell">./legit.pl commit -a -m commit2</kbd>
+Committed as commit 1
+<kbd class="shell">du -bs .legit</kbd>
+2194603 .legit
+<kbd class="shell">sed -i 500000d  million_line_file.txt</kbd>
+<kbd class="shell">./legit.pl commit -a -m commit3</kbd>
+Committed as commit 2
+<kbd class="shell">du -bs .legit</kbd>
+2195511 .legit
+</pre>
+<code>du -sb .legit</code> print how many bytes disk space the repository is using.
+<p>
+<code>sed -i 500000d </code> deletes the 500,000th line in the file.
+</p><p>
+Note the disk space used by the repository
+only grows a little when we add line to a very large file and commit it again,
+and similarly when we delete a line.
+
+</p><h2>Diary</h2>
+
+You must keep notes on each piece of work you make on this assignment.
+The notes should include date, starting &amp; finishing time, and a brief description of
+the work carried out.
+For example:
+<p>
+</p><table class="table table-bordered">
+<tbody><tr><th>Date</th><th>Start</th><th>Stop</th><th>Activity</th><th>Comments
+</th></tr><tr><td>18/09/18</td><td>16:00</td><td>17:30</td><td>coding</td><td>implemented basic commit functionality
+</td></tr><tr><td>19/09/18</td><td>20:00</td><td>10:30</td><td>debugging</td><td>found bug in command-line arguments
+</td></tr></tbody></table>
+<p>
+Include these notes in the files you submit as an ASCII file named diary.txt.
+
+</p><h2>Testing</h2>
+
+As usual some autotests will be available:
+
+<pre class="command_line"><kbd class="shell">2041 autotest legit legit.pl</kbd>
+</pre>
+
+You will need to do most of the testing yourself.
+
+<h2>Test Scripts</h2>
+
+You should submit ten Shell scripts named <code>test00.sh .. test09.sh</code>
+which run legit commands which test an aspect of Legit.
+<p>
+The <b>test??.sh</b> scripts do not have to be examples that your program implements successfully.
+</p><p>
+You may share your test examples with your friends but
+the ones you submit must be your own creation.
+</p><p>
+The test scripts should show how you've thought about testing carefully.
+
+</p><h2>Assumptions/Clarifications</h2>
+
+Like all good programmers, you should make as few assumptions as possible.
+<b>Your assignment must be entirely written in Perl.</b>
+<p>
+<b>It must not run external programs (e.g. via <code>system</code> or back-quotes).</b>
+</p><p>
+Your program will be run with version of Perl installed on CSE lab machines.
+</p><p>
+You may write scripts in Shell or other languages to assist in testing your assignment.
+</p><p>
+You may only use Perl packages which are installed on CSE's lab computers.
+</p><p>
+You may submit multiple Perl files but the primary file must be named <b>legit.pl</b>.
+</p><p>
+You can assume <b>legit.pl</b> is always run in the same directory as the repository and only files from that
+directory are added to the repository.
+</p><p>
+You can assume that the directory in which  <b>legit.pl</b> is run will not contain sub-directories apart from .legit.
+</p><p>
+You can assume that branch names all start with an alphanumeric character ([a-zA-Z0-9]) and will only contain alpha-numeric characters plus '.', '-' and '_'.
+</p><p>
+The <b>legit.pl</b> commands which are given filenames (add, show, rm) will be given just the filename, not pathnames with slashes.
+</p><p>
+You do not have to consider file permissions or other file metadata, for example you do not have to ensure files created by a checkout command have the same permisisons as when they were added.
+</p><p>
+You do not have to handle concurrancy.  You can assume only one instance of <b>legit.pl</b> is run at any time.
+</p><p>
+You assume only the arguments described aboved are supplied to legit.pl.  You do not have to handle other arguments.
+</p><p>
+You should match the output streams used by the reference implementation.
+It writes error messages to stderr, so should you in <b>legit.pl</b>.
+</p><p>
+You should match the exit status used by the reference implementation.
+It exits with status 1 after an error, so should you in <b>legit.pl</b>.
+
+</p><h2>Change Log</h2>
+<dl class="row">
+<dt class="col-3">
+    Version 1.0<br>
+    <small>(2018-09-12 11:32)</small>
+  </dt>
+  <dd class="col-9">
+    <ul>
+      <li>Reference implementation error messages changed to consistently quote branches and filenames.</li><li>Bugs in reference implementation branch command bugs fixed.</li><li>Autotests added.</li>
+    </ul>
+  </dd><dt class="col-3">
+    Version 1.1<br>
+    <small>(2018-09-13 14:10)</small>
+  </dt>
+  <dd class="col-9">
+    <ul>
+      <li>Add example for challenge component</li>
+    </ul>
+  </dd><dt class="col-3">
+    Version 1.2<br>
+    <small>(2018-09-14 23:10)</small>
+  </dt>
+  <dd class="col-9">
+    <ul>
+      <li>branch usage &amp; commit usage message corrected in spec &amp; reference implemementation</li>
+    </ul>
+  </dd><dt class="col-3">
+    Version 1.3<br>
+    <small>(2018-09-16 25:10)</small>
+  </dt>
+  <dd class="col-9">
+    <ul>
+      <li>autotests added</li>
+    </ul>
+  </dd>
+</dl>
+<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>
+
+
+
+
+
+
+
+
+
+
+<h2>Attribution of Work</h2>
+
+This is an individual assignment. The work you submit must be your own work and only your
+work apart from any exceptions explicitly included in the assignment specification above.
+<p>
+Joint work is not permitted.
+</p><p>
+You are only permitted to request help with the assignment
+in the course forum, help sessions or from course lecturers or tutors.
+</p><p>
+Do not provide or show your assignment work to any other person (including by posting it on the forum)
+apart from the teaching staff of COMP[29]041.
+
+</p><p>
+The work you submit must otherwise be entirely your own work.  Submission of work partially or completely derived
+from any other person or jointly written with any other person is not permitted.
+The penalties for such an offence may include negative marks,
+automatic failure of the course and possibly other academic discipline.
+Assignment submissions will be examined both automatically and manually
+for such submissions.
+</p><p>
+We are required to inform scholarship authorities if students holding scholarships
+are involved in an incident of plagiarism or other misconduct, and this may result in a loss of the scholarship.
+</p><p>
+Plagiarism or other misconduct can also result in loss of student visas.
+</p><p>
+If you knowingly provide or show your assignment work to another person for any
+reason, and work derived from it is submitted you may be penalized, even
+if the work was submitted without your knowledge or consent.  This may
+apply even if your work is submitted by a third party unknown to you.
+</p><p>
+Note, you will not be penalized if your work is
+taken without your consent or knowledge.
+
+
+
+</p><h2>Submission of Work</h2>
+
+You are required to submit intermediate versions of your assignment.
+<p>
+Every time you work on the assignment and make some progress you
+should copy your work to your CSE account and submit it using the give command below.
+</p><p>
+It is fine if intermediate versions do not compile or otherwise
+fail submission tests.
+</p><p>
+Only the final submitted version of your assignment will be marked.
+</p><p>
+All these intermediate versions of your work will be placed in a git repository
+and made available to you via a web interface at this URL, replace <i>z5555555</i> with your own zid:
+<code>https://gitlab.cse.unsw.edu.au/<i>z5555555</i>/18s2-comp2041-ass1_legit/commits/master</code>
+</p><p>
+This will allow you to retrieve earlier versions of your code if needed.
+</p><p>
+You submit your work like this:
+</p><p>
+
+
+</p><pre class="command_line"><kbd class="shell">give cs2041 legit.pl diary.txt test??.sh <i>[any-other-files]</i></kbd>
+</pre>
+
+
+
+
+
+
+<h2>Assessment</h2>
+
+This assignment will contribute 15 marks to your final COMP[29]041 mark
+<p>
+15% of the marks for assignment 1 will come from hand marking.  These marks will be awarded on the basis of clarity,
+commenting, elegance and style.  In other words, you will be assessed on how
+easy it is for a human to read and understand your program.
+</p><p>
+5% of the marks for assignment 1 will be based on the test suite you submit.
+</p><p>
+80% of the marks for assignment 1 will come from the performance of your code on a large series of tests.
+</p><p>
+</p><table class="table table-bordered table-striped">
+<tbody><tr><td>HD+ 100</td><td>All subsets working &amp; challenge, legit.pl is beautiful, great test suite &amp; diary
+</td></tr><tr><td>HD (90)</td><td>Subset 2 working, legit.pl is very clear &amp; very readable, very good test suite &amp; diary
+</td></tr><tr><td>DN (80)</td><td>Subset 1 working, legit.pl is good clear code, good test suite &amp; diary
+</td></tr><tr><td>CR (70)</td><td>Subset 0 working, legit.pl is good clear code, good test suite &amp; diary
+</td></tr><tr><td>PS (60)</td><td>Subset 0 passing some tests, legit.pl is reasonably readable, reasonable test suite &amp; diary
+</td></tr><tr><td>PS (55)</td><td>Subset 0 working internally (storing data) put not passing tests
+</td></tr><tr><td>0%</td><td>Knowingly providing your work to anyone and it is subsequently submitted (by anyone).
+</td></tr><tr><td>0 FL for COMP[29]041</td><td>Submitting any other person's work.  This includes joint work.
+</td></tr><tr><td>academic<br>misconduct</td><td>Submitting another person's work without their consent.  Paying another person to do work for you.
+</td></tr></tbody></table>
+<p>
+The lecturer may vary the assessment scheme after inspecting
+the assignment submissions but its likely to be broadly similar to the above.
+
+
+
+
+</p><h2>Due Date</h2>
+
+This assignment is tentatively due  Wednesday 03 October 23:59:59
+<p>
+If your assignment is submitted after this date, each hour it is late reduces
+the maximum mark it can achieve by 2%.
+For example if an assignment worth 74% was submitted
+10 hours late, the late submission would have no effect.
+If the same assignment was submitted 15 hours late it would be awarded
+70%, the maximum mark it can achieve at that time.
+
+
+
+
+
+
+
+</p><footer class="mt-3 container text-center no-print">
+<p class="text-muted">
+<strong>COMP[29]041 18s2: Software Construction</strong>
+is brought to you by <br>
+the <a href="https://www.cse.unsw.edu.au/">School of Computer Science and Engineering</a>
+at the <a href="https://www.unsw.edu.au/">University of New South Wales</a>, Sydney.<br>
+For all enquiries, please email the class account at
+<a href="mailto:@cse.unsw.edu.au">cs2041@cse.unsw.edu.au</a><br>
+
+<small>CRICOS Provider 00098G</small>
+</p>
+
+
+
+</footer>
+
+
+
+
+
+</body></html>
