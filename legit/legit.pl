@@ -13,68 +13,70 @@ if (@ARGV == 0) {
   if ($input =~ /init/) {
     # init legit folder
     init();
-  } elsif ($input =~ /add/) {
-    # .+ because there must be at least one file
-    if ($input =~ /add (.+)/) {
-      # valid add command
-      my @files = split ' ', $1 or die;
-      foreach my $f (@files) {
-        if ($f =~ /^[a-zA-Z0-9][a-zA-Z0-9.-_]*/) {
-          # only match alpha-numeric start + alpha-numeric [.-_]
-          add($f);
-        } else {
-          # show error message
-          exit if print "legit.pl: error: invalid filename '$f'\n";
+  } elsif (legit_exist()) {
+    if ($input =~ /add/) {
+      # .+ because there must be at least one file
+      if ($input =~ /add (.+)/) {
+        # valid add command
+        my @files = split ' ', $1 or die;
+        foreach $f (@files) {
+          if ($f =~ /^[a-zA-Z0-9][a-zA-Z0-9.-_]*/) {
+            # only match alpha-numeric start + alpha-numeric [.-_]
+            add($f);
+          } else {
+            # show error message
+            exit if print "legit.pl: error: invalid filename '$f'\n";
+          }
         }
-      }
-    } else {
-      # print error message
-      exit if print "legit.pl: error: internal error Nothing specified, nothing added.\n";
-    }
-  } elsif ($input =~ /commit (.*)/) {
-    # save $1 for multiple if, after first if $1 will be gone
-    my $input = $1;
-    my $message = "";
-    my $mode = "normal"; # -a will trigger "all" mode
-    # use argument numbers to check if input is valid
-    if ($input =~ /^-m/ && @ARGV == 3) {
-      $message = $ARGV[2];
-    } elsif ($input =~ /^-a -m/ && @ARGV == 4) {
-      $message = $ARGV[3];
-      $mode = "all";
-    } else {
-      exit if printf "usage: legit.pl commit [-a] -m commit-message\n";
-    }
-
-    commit($message, $mode);
-  } elsif ($input =~ /log/) {
-    # show past commits so basically cat commit
-    print_file(".legit/$branch/commit");
-  } elsif ($input =~ /show (.*)/) {
-    my $input = $1;
-    # check for correct amounts of input
-    if (@ARGV == 2) {
-      my $folder = "index";
-      my $file = "";
-      if ($input =~ /^([0-9]+):([^ ]+)/) {
-        # show 0:filename, so go into that folder
-        $folder = $1;
-        $file = $2;
-      } elsif ($input =~ /^:([^ ]+)/) {
-        # show :filename, ignore extra space, display files in index
-        $file = $1;
       } else {
-        # somehow it does not match
+        # print error message
+        exit if print "legit.pl: error: internal error Nothing specified, nothing added.\n";
+      }
+    } elsif ($input =~ /commit (.*)/) {
+      # save $1 for multiple if, after first if $1 will be gone
+      my $input = $1;
+      my $message = "";
+      my $mode = "normal"; # -a will trigger "all" mode
+      # use argument numbers to check if input is valid
+      if ($input =~ /^-m/ && @ARGV == 3) {
+        $message = $ARGV[2];
+      } elsif ($input =~ /^-a -m/ && @ARGV == 4) {
+        $message = $ARGV[3];
+        $mode = "all";
+      } else {
+        exit if printf "usage: legit.pl commit [-a] -m commit-message\n";
+      }
+
+      commit($message, $mode);
+    } elsif ($input =~ /log/) {
+      # show past commits so basically cat commit
+      print_file(".legit/$branch/commit");
+    } elsif ($input =~ /show (.*)/) {
+      my $input = $1;
+      # check for correct amounts of input
+      if (@ARGV == 2) {
+        my $folder = "index";
+        my $file = "";
+        if ($input =~ /^([0-9]+):([^ ]+)/) {
+          # show 0:filename, so go into that folder
+          $folder = $1;
+          $file = $2;
+        } elsif ($input =~ /^:([^ ]+)/) {
+          # show :filename, ignore extra space, display files in index
+          $file = $1;
+        } else {
+          # somehow it does not match
+          exit if print "usage: legit.pl show <commit>:<filename>\n";
+        }
+
+        show($folder, $file);
+      } else {
+        # usage message
         exit if print "usage: legit.pl show <commit>:<filename>\n";
       }
-
-      show($folder, $file);
     } else {
-      # usage message
-      exit if print "usage: legit.pl show <commit>:<filename>\n";
+      usage();
     }
-  } else {
-    usage();
   }
 }
 
@@ -85,17 +87,11 @@ sub make_file {
   close $f;
 }
 
-# prepend content to file
-sub prepend_file {
+# append content to file
+sub write_file {
   my ($path, $message) = @_;
-  # read all text
-  open my $f, '<', $path or die;
-  my @text = <$f>;
-  close $f;
-  # prepend message
-  open $f, '>', $path or die;
+  open my $f, '>>', $path or die;
   print $f $message;
-  print $f @text;
   close $f;
 }
 
@@ -153,9 +149,7 @@ sub init {
 # add files
 sub add {
   my ($f) = @_;
-  if (legit_exist) {
-    copy($f, ".legit/$branch/index");
-  }
+  copy($f, ".legit/$branch/index");
 }
 
 # commit files with mode
@@ -178,7 +172,7 @@ sub commit {
     # create another index folder
     make_path ".legit/$branch/index/" or die;
     # record this commit
-    prepend_file(".legit/$branch/commit", "$commit_count $message\n");
+    write_file(".legit/$branch/commit", "$commit_count $message\n");
 
     print "Committed as commit $commit_count\n";
   }
@@ -194,11 +188,11 @@ sub show {
       # check if such file also exits before printing
       print_file($file);
     } else {
-      my $message = "commit $folder";
-      $message = "index" if ($folder eq "index");
-      exit if print "legit.pl: error: '$name' not found in $message\n";
+      exit if print "legit.pl: error: '$name' not found in $folder\n";
     }
   } else {
-    exit if print "legit.pl: error: unknown commit '$folder'\n";
+    my $message = "commit '$folder";
+    $message = "index" if ($folder eq "index");
+    exit if print "legit.pl: error: unknown $message\n";
   }
 }
