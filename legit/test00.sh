@@ -2,6 +2,7 @@
 
 touch a
 
+echo "\n=== SITUATION: NO .LEGIT FOLDER ===\n"
 echo add without init, FAIL
 ./legit.pl add a
 echo 
