@@ -47,6 +47,11 @@ if (@ARGV == 0) {
     }
 
     commit($message, $mode);
+  } elsif ($input =~ /log/) {
+    # show past commits so basically cat commit
+    open my $f, '<', ".legit/$branch/commit" or die;
+    print <$f>;
+    close $f;
   } else {
     usage();
   }
