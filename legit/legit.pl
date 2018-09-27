@@ -10,12 +10,15 @@ if (@ARGV == 0) {
     init();
   } elsif ($input =~ /add (.*)/) {
     my @files = split ' ', $1 or die;
-    if (@files == 0) {
-
-    } else {
-
+    foreach $f (@files) {
+      if ($f =~ /^[a-zA-Z0-9][a-zA-Z0-9.-_]*/) {
+        # only match alpha-numeric start + alpha-numeric [.-_]
+        print "$f\n";
+      } else {
+        # show error message
+        exit if print "legit.pl: error: invalid filename '$f'\n";
+      }
     }
-    print @files;
   } elsif ($input =~ //) {
     
   } elsif ($input =~ //) {
