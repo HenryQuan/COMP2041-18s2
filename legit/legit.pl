@@ -39,20 +39,6 @@ if (@ARGV == 0) {
     }
 
     commit($message, $mode);
-  } elsif ($input =~ //) {
-    
-  } elsif ($input =~ //) {
-    
-  } elsif ($input =~ //) {
-    
-  } elsif ($input =~ //) {
-    
-  } elsif ($input =~ //) {
-    
-  } elsif ($input =~ //) {
-    
-  } elsif ($input =~ //) {
-    
   } else {
     usage();
   }
