@@ -18,7 +18,7 @@ if (@ARGV == 0) {
     if ($input =~ /add (.+)/) {
       # valid add command
       my @files = split ' ', $1 or die;
-      foreach $f (@files) {
+      foreach my $f (@files) {
         if ($f =~ /^[a-zA-Z0-9][a-zA-Z0-9.-_]*/) {
           # only match alpha-numeric start + alpha-numeric [.-_]
           add($f);
@@ -85,11 +85,17 @@ sub make_file {
   close $f;
 }
 
-# append content to file
-sub write_file {
+# prepend content to file
+sub prepend_file {
   my ($path, $message) = @_;
-  open my $f, '>>', $path or die;
+  # read all text
+  open my $f, '<', $path or die;
+  my @text = <$f>;
+  close $f;
+  # prepend message
+  open $f, '>', $path or die;
   print $f $message;
+  print $f @text;
   close $f;
 }
 
@@ -113,7 +119,7 @@ sub empty_folder {
 sub legit_exist {
   return 1 if (-d '.legit');
   # stop if there is not legit folder
-  exit if print "legit.pl: error: no .legit directory containing legit repository exists";
+  exit if print "legit.pl: error: no .legit directory containing legit repository exists\n";
 }
 
 # show usage
@@ -172,7 +178,7 @@ sub commit {
     # create another index folder
     make_path ".legit/$branch/index/" or die;
     # record this commit
-    write_file(".legit/$branch/commit", "$commit_count $message\n");
+    prepend_file(".legit/$branch/commit", "$commit_count $message\n");
 
     print "Committed as commit $commit_count\n";
   }
@@ -188,7 +194,9 @@ sub show {
       # check if such file also exits before printing
       print_file($file);
     } else {
-      exit if print "legit.pl: error: '$name' not found in $folder\n";
+      my $message = "commit $folder";
+      $message = "index" if ($folder eq "index");
+      exit if print "legit.pl: error: '$name' not found in $message\n";
     }
   } else {
     exit if print "legit.pl: error: unknown commit '$folder'\n";
