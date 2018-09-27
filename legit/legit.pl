@@ -7,7 +7,8 @@ my $branch = 'master';
 if (@ARGV == 0) {
   usage();
 } else {
-  my $input = join " ", @ARGV;
+  my $input = join ' ', @ARGV;
+
   if ($input =~ /init/) {
     # init legit folder
     init();
@@ -23,11 +24,21 @@ if (@ARGV == 0) {
       }
     }
   } elsif ($input =~ /commit (.*)/) {
-    if ($1 =~ /(-m|-a -m) .*/) {
-      print "$1";
+    # save $1 for multiple if, after first if $1 will be gone
+    my $input = $1;
+    my $message = "";
+    my $mode = "normal"; # -a will trigger "all" mode
+    # use argument numbers to check if input is valid
+    if ($input =~ /^-m/ && @ARGV == 3) {
+      $message = $ARGV[2];
+    } elsif ($input =~ /^-a -m/ && @ARGV == 4) {
+      $message = $ARGV[3];
+      $mode = "all";
     } else {
       exit if printf "usage: legit.pl commit [-a] -m commit-message\n";
     }
+
+    commit($message, $mode);
   } elsif ($input =~ //) {
     
   } elsif ($input =~ //) {
@@ -42,7 +53,16 @@ if (@ARGV == 0) {
     
   } elsif ($input =~ //) {
     
+  } else {
+    usage();
   }
+}
+
+# create a new empty file
+sub make_file {
+  my ($path) = @_;
+  open my $f, '>', $path or die;
+  close $f;
 }
 
 # show usage
@@ -62,12 +82,6 @@ These are the legit commands:
   merge      Join two development histories together\n\n"
 }
 
-sub make_file {
-  my ($path) = @_;
-  open my $f, '>', $path or die;
-  close $f;
-}
-
 # init legit folder
 sub init {
   if (-d '.legit') {
@@ -85,7 +99,7 @@ sub add {
   copy($f, ".legit/$branch/index") or die;
 }
 
-# commit files
+# commit files with mode
 sub commit {
-
+  my ($message, $mode) = @_;
 }
