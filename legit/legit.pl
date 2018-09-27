@@ -58,12 +58,19 @@ These are the legit commands:
   merge      Join two development histories together\n\n"
 }
 
+sub make_file {
+  my ($path) = @_;
+  open my $f, '>', $path or die;
+  close $f;
+}
+
 # init legit folder
 sub init {
   if (-d '.legit') {
     print "legit.pl: error: .legit already exists\n";
   } else {
     make_path ".legit/$branch/index" or die;
+    make_file ".legit/$branch/commit";
     print "Initialized empty legit repository in .legit\n";
   }
 }
@@ -71,6 +78,5 @@ sub init {
 # add files
 sub add {
   my ($f) = @_;
-  print $f;
-  copy($f, ".legit/$branch/index");
+  copy($f, ".legit/$branch/index") or die;
 }
