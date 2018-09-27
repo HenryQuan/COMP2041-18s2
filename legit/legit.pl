@@ -1,5 +1,8 @@
 #!/usr/bin/perl -w
 use File::Path qw(make_path);
+use File::Copy;
+
+my $branch = 'master';
 
 if (@ARGV == 0) {
   usage();
@@ -13,7 +16,7 @@ if (@ARGV == 0) {
     foreach $f (@files) {
       if ($f =~ /^[a-zA-Z0-9][a-zA-Z0-9.-_]*/) {
         # only match alpha-numeric start + alpha-numeric [.-_]
-        print "$f\n";
+        add($f);
       } else {
         # show error message
         exit if print "legit.pl: error: invalid filename '$f'\n";
@@ -60,12 +63,14 @@ sub init {
   if (-d '.legit') {
     print "legit.pl: error: .legit already exists\n";
   } else {
-    make_path '.legit/master/index' or die;
+    make_path ".legit/$branch/index" or die;
     print "Initialized empty legit repository in .legit\n";
   }
 }
 
 # add files
 sub add {
-
+  my ($f) = @_;
+  print $f;
+  copy($f, ".legit/$branch/index");
 }
