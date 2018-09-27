@@ -22,8 +22,12 @@ if (@ARGV == 0) {
         exit if print "legit.pl: error: invalid filename '$f'\n";
       }
     }
-  } elsif ($input =~ //) {
-    
+  } elsif ($input =~ /commit (.*)/) {
+    if ($1 =~ /(-m|-a -m) .*/) {
+      print "$1";
+    } else {
+      exit if printf "usage: legit.pl commit [-a] -m commit-message\n";
+    }
   } elsif ($input =~ //) {
     
   } elsif ($input =~ //) {
@@ -79,4 +83,9 @@ sub init {
 sub add {
   my ($f) = @_;
   copy($f, ".legit/$branch/index") or die;
+}
+
+# commit files
+sub commit {
+
 }
