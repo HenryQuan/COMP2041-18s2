@@ -13,7 +13,7 @@ if (@ARGV == 0) {
     if (@files == 0) {
 
     } else {
-      
+
     }
     print @files;
   } elsif ($input =~ //) {
@@ -37,7 +37,19 @@ if (@ARGV == 0) {
 
 # show usage
 sub usage {
-  print "Usage...\n";
+  print "Usage: legit.pl <command> [<args>]
+
+These are the legit commands:
+  init       Create an empty legit repository
+  add        Add file contents to the index
+  commit     Record changes to the repository
+  log        Show commit log
+  show       Show file at particular state
+  rm         Remove files from the current directory and from the index
+  status     Show the status of files in the current directory, index, and repository
+  branch     list, create or delete a branch
+  checkout   Switch branches or restore current directory files
+  merge      Join two development histories together\n\n"
 }
 
 # init legit folder
