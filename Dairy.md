@@ -8,7 +8,8 @@
 |25/09/18|21:00|21:30|Learning about Git|watch the introduction video of git, start planning|
 |25/09/18|21:30|22:00|Adding test scripts|add empty scripts for future testing|
 |26/09/18|20:00|21:00|Subset 0|init and basic structure|
-|27/09/18|15:15|---|Subset 0|add,|
+|27/09/18|15:15|17:00|Subset 0|add|
+|27/09/18|21:00||Subset 0|commit|
 ## Second
 |Date|Start|Stop|Activity|Comments|
 |:---|:---|:---|:---|:---|
