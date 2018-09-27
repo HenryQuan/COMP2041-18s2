@@ -9,7 +9,8 @@
 |25/09/18|21:30|22:00|Adding test scripts|add empty scripts for future testing|
 |26/09/18|20:00|21:00|Subset 0|init and basic structure|
 |27/09/18|15:15|17:00|Subset 0|add|
-|27/09/18|21:00||Subset 0|commit|
+|27/09/18|21:00|22:00|Subset 0|commit, log, show|
+|27/09/18|22:00||Subset 0|pass all subset 0 test|
 ## Second
 |Date|Start|Stop|Activity|Comments|
 |:---|:---|:---|:---|:---|

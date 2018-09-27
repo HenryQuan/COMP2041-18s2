@@ -110,6 +110,12 @@ sub empty_folder {
   return 0;
 }
 
+sub legit_exist {
+  return 1 if (-d '.legit');
+  # stop if there is not legit folder
+  exit if print "legit.pl: error: no .legit directory containing legit repository exists";
+}
+
 # show usage
 sub usage {
   print "Usage: legit.pl <command> [<args>]
@@ -141,7 +147,9 @@ sub init {
 # add files
 sub add {
   my ($f) = @_;
-  copy($f, ".legit/$branch/index");
+  if (legit_exist) {
+    copy($f, ".legit/$branch/index");
+  }
 }
 
 # commit files with mode
@@ -170,12 +178,14 @@ sub commit {
   }
 }
 
+# show commited file
 sub show {
   my ($folder, $name) = @_;
   if (-d ".legit/$branch/$folder") {
-    # there is such folder so that we could cat that file
+    # there is such folder so that we could print that file
     my $file = ".legit/$branch/$folder/$name";
     if (-e $file) {
+      # check if such file also exits before printing
       print_file($file);
     } else {
       exit if print "legit.pl: error: '$name' not found in $folder\n";
