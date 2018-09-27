@@ -29,7 +29,7 @@ if (@ARGV == 0) {
       }
     } else {
       # print error message
-      print "legit.pl: error: internal error Nothing specified, nothing added.\n";
+      exit if print "legit.pl: error: internal error Nothing specified, nothing added.\n";
     }
   } elsif ($input =~ /commit (.*)/) {
     # save $1 for multiple if, after first if $1 will be gone
@@ -49,9 +49,30 @@ if (@ARGV == 0) {
     commit($message, $mode);
   } elsif ($input =~ /log/) {
     # show past commits so basically cat commit
-    open my $f, '<', ".legit/$branch/commit" or die;
-    print <$f>;
-    close $f;
+    print_file(".legit/$branch/commit");
+  } elsif ($input =~ /show (.*)/) {
+    my $input = $1;
+    # check for correct amounts of input
+    if (@ARGV == 2) {
+      my $folder = "index";
+      my $file = "";
+      if ($input =~ /^([0-9]+):([^ ]+)/) {
+        # show 0:filename, so go into that folder
+        $folder = $1;
+        $file = $2;
+      } elsif ($input =~ /^:([^ ]+)/) {
+        # show :filename, ignore extra space, display files in index
+        $file = $1;
+      } else {
+        # somehow it does not match
+        exit if print "usage: legit.pl show <commit>:<filename>\n";
+      }
+
+      show($folder, $file);
+    } else {
+      # usage message
+      exit if print "usage: legit.pl show <commit>:<filename>\n";
+    }
   } else {
     usage();
   }
@@ -69,6 +90,13 @@ sub write_file {
   my ($path, $message) = @_;
   open my $f, '>>', $path or die;
   print $f $message;
+  close $f;
+}
+
+sub print_file {
+  my ($path) = @_;
+  open my $f, '<', $path or die;
+  print <$f>;
   close $f;
 }
 
@@ -102,11 +130,11 @@ These are the legit commands:
 # init legit folder
 sub init {
   if (-d '.legit') {
-    print "legit.pl: error: .legit already exists\n";
+    exit if print "legit.pl: error: .legit already exists\n";
   } else {
     make_path ".legit/$branch/index" or die;
     make_file ".legit/$branch/commit";
-    print "Initialized empty legit repository in .legit\n";
+    exit if print "Initialized empty legit repository in .legit\n";
   }
 }
 
@@ -139,5 +167,20 @@ sub commit {
     write_file(".legit/$branch/commit", "$commit_count $message\n");
 
     print "Committed as commit $commit_count\n";
+  }
+}
+
+sub show {
+  my ($folder, $name) = @_;
+  if (-d ".legit/$branch/$folder") {
+    # there is such folder so that we could cat that file
+    my $file = ".legit/$branch/$folder/$name";
+    if (-e $file) {
+      print_file($file);
+    } else {
+      exit if print "legit.pl: error: '$name' not found in $folder\n";
+    }
+  } else {
+    exit if print "legit.pl: error: unknown commit '$folder'\n";
   }
 }
