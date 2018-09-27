@@ -63,7 +63,7 @@ sub make_file {
 # check if path is empty
 sub empty_folder {
   my ($path) = @_;
-  my @files = glob $path or die;
+  my @files = glob $path;
   if (@files == 0) {
     return 1;
   }
@@ -107,5 +107,9 @@ sub add {
 # commit files with mode
 sub commit {
   my ($message, $mode) = @_;
-  empty_folder(".legit/$branch/index");
+  if (empty_folder(".legit/$branch/index/*")) {
+    print "Nothing to commit\n";
+  } else {
+    print "Commit\n";
+  }
 }
