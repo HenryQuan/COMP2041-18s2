@@ -7,21 +7,30 @@ my $branch = 'master';
 if (@ARGV == 0) {
   usage();
 } else {
-  my $input = join ' ', @ARGV;
+  # add extra space to match regex
+  my $input = join(' ', @ARGV) . ' ';
 
   if ($input =~ /init/) {
     # init legit folder
     init();
-  } elsif ($input =~ /add (.*)/) {
-    my @files = split ' ', $1 or die;
-    foreach $f (@files) {
-      if ($f =~ /^[a-zA-Z0-9][a-zA-Z0-9.-_]*/) {
-        # only match alpha-numeric start + alpha-numeric [.-_]
-        add($f);
-      } else {
-        # show error message
-        exit if print "legit.pl: error: invalid filename '$f'\n";
+  } elsif ($input =~ /add/) {
+    # .+ because there must be at least one file
+    if ($input =~ /add (.+)/) {
+      # valid add command
+      print $input;
+      my @files = split ' ', $1 or die;
+      foreach $f (@files) {
+        if ($f =~ /^[a-zA-Z0-9][a-zA-Z0-9.-_]*/) {
+          # only match alpha-numeric start + alpha-numeric [.-_]
+          add($f);
+        } else {
+          # show error message
+          exit if print "legit.pl: error: invalid filename '$f'\n";
+        }
       }
+    } else {
+      # print error message
+      print "legit.pl: error: internal error Nothing specified, nothing added.\n";
     }
   } elsif ($input =~ /commit (.*)/) {
     # save $1 for multiple if, after first if $1 will be gone
@@ -49,6 +58,16 @@ sub make_file {
   my ($path) = @_;
   open my $f, '>', $path or die;
   close $f;
+}
+
+# check if path is empty
+sub empty_folder {
+  my ($path) = @_;
+  my @files = glob $path or die;
+  if (@files == 0) {
+    return 1;
+  }
+  return 0;
 }
 
 # show usage
@@ -88,4 +107,5 @@ sub add {
 # commit files with mode
 sub commit {
   my ($message, $mode) = @_;
+  empty_folder(".legit/$branch/index");
 }
