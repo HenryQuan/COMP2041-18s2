@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-my $legit = ".legit/";
+use File::Path qw(make_path);
 
 if (@ARGV == 0) {
   usage();
@@ -8,8 +8,14 @@ if (@ARGV == 0) {
   if ($input =~ /init/) {
     # init legit folder
     init();
-  } elsif ($input =~ /add.*/) {
+  } elsif ($input =~ /add (.*)/) {
+    my @files = split ' ', $1 or die;
+    if (@files == 0) {
 
+    } else {
+      
+    }
+    print @files;
   } elsif ($input =~ //) {
     
   } elsif ($input =~ //) {
@@ -36,10 +42,10 @@ sub usage {
 
 # init legit folder
 sub init {
-  if (-d $legit) {
+  if (-d '.legit') {
     print "legit.pl: error: .legit already exists\n";
   } else {
-    mkdir $legit or die "cannot create .legit folder";
+    make_path '.legit/master/index' or die;
     print "Initialized empty legit repository in .legit\n";
   }
 }
