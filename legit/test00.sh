@@ -71,7 +71,13 @@ echo - add files and commit, OK
 ./legit.pl commit -m "Hello World"
 echo
 
-echo - no changes but commit, FAIL
+echo - no changes, no add but commit, FAIL
+./legit.pl commit -m "Hello World"
+echo
+
+# ToDO: fix this issue
+echo - no changes with add but commit, FAIL
+./legit.pl add *
 ./legit.pl commit -m "Hello World"
 echo
 
