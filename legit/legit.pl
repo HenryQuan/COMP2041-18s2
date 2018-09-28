@@ -112,6 +112,17 @@ sub empty_folder {
   return 0;
 }
 
+# check folder to another one
+sub copy_folder {
+  my ($path, $des) = @_;
+  if (-d $path && -d $des) {
+    # copy is possible
+  } else {
+    # show error
+    exit 1 if print "error: could not copy folder";
+  }
+}
+
 sub legit_exist {
   return 1 if (-d '.legit');
   # stop if there is not legit folder
@@ -173,9 +184,7 @@ sub commit {
     # create commit folder and move index to become the new folder
     my $commit_folder = ".legit/$branch/$commit_count";
     make_path $commit_folder or die;
-    move(".legit/$branch/index", $commit_folder) or die;
-    # create another index folder
-    make_path ".legit/$branch/index/" or die;
+    copy(".legit/$branch/index/", $commit_folder) or die;
     # record this commit
     write_file(".legit/$branch/commit", "$commit_count $message\n");
 
