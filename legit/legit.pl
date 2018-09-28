@@ -25,12 +25,12 @@ if (@ARGV == 0) {
             add($f);
           } else {
             # show error message
-            exit if print "legit.pl: error: invalid filename '$f'\n";
+            exit 1 if print "legit.pl: error: invalid filename '$f'\n";
           }
         }
       } else {
         # print error message
-        exit if print "legit.pl: error: internal error Nothing specified, nothing added.\n";
+        exit 1 if print "legit.pl: error: internal error Nothing specified, nothing added.\n";
       }
     } elsif ($input =~ /commit (.*)/) {
       # save $1 for multiple if, after first if $1 will be gone
@@ -44,7 +44,7 @@ if (@ARGV == 0) {
         $message = $ARGV[3];
         $mode = "all";
       } else {
-        exit if printf "usage: legit.pl commit [-a] -m commit-message\n";
+        exit 1 if printf "usage: legit.pl commit [-a] -m commit-message\n";
       }
 
       commit($message, $mode);
@@ -66,13 +66,13 @@ if (@ARGV == 0) {
           $file = $1;
         } else {
           # somehow it does not match
-          exit if print "usage: legit.pl show <commit>:<filename>\n";
+          exit 1 if print "usage: legit.pl show <commit>:<filename>\n";
         }
 
         show($folder, $file);
       } else {
         # usage message
-        exit if print "usage: legit.pl show <commit>:<filename>\n";
+        exit 1 if print "usage: legit.pl show <commit>:<filename>\n";
       }
     } else {
       usage();
@@ -115,7 +115,7 @@ sub empty_folder {
 sub legit_exist {
   return 1 if (-d '.legit');
   # stop if there is not legit folder
-  exit if print "legit.pl: error: no .legit directory containing legit repository exists\n";
+  exit 1 if print "legit.pl: error: no .legit directory containing legit repository exists\n";
 }
 
 # show usage
@@ -138,25 +138,30 @@ These are the legit commands:
 # init legit folder
 sub init {
   if (-d '.legit') {
-    exit if print "legit.pl: error: .legit already exists\n";
+    exit 1 if print "legit.pl: error: .legit already exists\n";
   } else {
     make_path ".legit/$branch/index" or die;
     make_file ".legit/$branch/commit";
-    exit if print "Initialized empty legit repository in .legit\n";
+    exit 1 if print "Initialized empty legit repository in .legit\n";
   }
 }
 
 # add files
 sub add {
   my ($f) = @_;
-  copy($f, ".legit/$branch/index");
+  # check if file exists
+  if (-e $f) {
+    copy($f, ".legit/$branch/index");
+  } else {
+    exit 1 if print "legit.pl: error: can not open '$f'\n";
+  }
 }
 
 # commit files with mode
 sub commit {
   my ($message, $mode) = @_;
   if (empty_folder(".legit/$branch/index/*")) {
-    print "Nothing to commit\n";
+    print "nothing to commit\n";
   } else {
     # check for next commit folder
     my $commit_count = 0;
@@ -188,11 +193,11 @@ sub show {
       # check if such file also exits before printing
       print_file($file);
     } else {
-      exit if print "legit.pl: error: '$name' not found in $folder\n";
+      exit 1 if print "legit.pl: error: '$name' not found in $folder\n";
     }
   } else {
     my $message = "commit '$folder";
     $message = "index" if ($folder eq "index");
-    exit if print "legit.pl: error: unknown $message\n";
+    exit 1 if print "legit.pl: error: unknown $message\n";
   }
 }
