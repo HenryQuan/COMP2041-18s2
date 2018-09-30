@@ -75,6 +75,10 @@ if (@ARGV == 0) {
         # usage message
         exit 1 if print "usage: legit.pl show <commit>:<filename>\n";
       }
+    } elsif ($input =~ /status/) {
+      status();
+    } elsif ($input =~ /rm (.*)/) {
+      my $input = $1;
     } else {
       usage();
     }
@@ -130,16 +134,6 @@ sub copy_folder {
   } else {
     # show error
     exit 1 if print "error: could not copy folder";
-  }
-}
-
-# compare two files
-sub compare_file {
-  my ($first, $second) = @_;
-  if (compare($first, $second) == 0) {
-    return 1;
-  } else {
-    return 0;
   }
 }
 
@@ -229,4 +223,23 @@ sub show {
     $message = "index" if ($folder eq "index");
     exit 1 if print "legit.pl: error: unknown $message\n";
   }
+}
+
+# show status
+sub status {
+  my $total = 
+  foreach my $file (glob "*") {
+    print "$file - ";
+    if (compare($file, ".legit/$branch/index/$file") == 0) {
+      print "same as repo";
+    } else {
+      print "file changed, ";
+    }
+    print "\n";
+  }
+}
+
+# remove files from index or current directory
+sub remove {
+  
 }

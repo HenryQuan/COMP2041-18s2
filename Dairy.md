@@ -11,6 +11,7 @@
 |27/09/18|15:15|17:00|Subset 0|add|
 |27/09/18|21:00|22:00|Subset 0|commit, log, show|
 |27/09/18|22:00|23:00|Subset 0|fixing subset 0 bugs|
+|27/09/18|21:15|23:00|Subset 0|status|
 ## Second
 |Date|Start|Stop|Activity|Comments|
 |:---|:---|:---|:---|:---|
