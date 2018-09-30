@@ -117,6 +117,9 @@ sub copy_folder {
   my ($path, $des) = @_;
   if (-d $path && -d $des) {
     # copy is possible
+    foreach $file (glob "$path/*") {
+      copy($file, $des);
+    }
   } else {
     # show error
     exit 1 if print "error: could not copy folder";
@@ -184,7 +187,7 @@ sub commit {
     # create commit folder and move index to become the new folder
     my $commit_folder = ".legit/$branch/$commit_count";
     make_path $commit_folder or die;
-    copy(".legit/$branch/index/", $commit_folder) or die;
+    copy_folder(".legit/$branch/index", $commit_folder);
     # record this commit
     write_file(".legit/$branch/commit", "$commit_count $message\n");
 
