@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 use File::Path qw(make_path);
 use File::Copy;
+use File::Compare;
 
 my $branch = 'master';
 
@@ -88,10 +89,16 @@ sub make_file {
 }
 
 # append content to file
-sub write_file {
+sub prepend_file {
   my ($path, $message) = @_;
-  open my $f, '>>', $path or die;
+  # save old text
+  open my $f, '<', $path or die;
+  my @old = <$f>;
+  close $f;
+  # prepend
+  open $f, '>', $path or die;
   print $f $message;
+  print $f @old;
   close $f;
 }
 
@@ -117,12 +124,22 @@ sub copy_folder {
   my ($path, $des) = @_;
   if (-d $path && -d $des) {
     # copy is possible
-    foreach $file (glob "$path/*") {
+    foreach my $file (glob "$path/*") {
       copy($file, $des);
     }
   } else {
     # show error
     exit 1 if print "error: could not copy folder";
+  }
+}
+
+# compare two files
+sub compare_file {
+  my ($first, $second) = @_;
+  if (compare($first, $second) == 0) {
+    return 1;
+  } else {
+    return 0;
   }
 }
 
@@ -175,7 +192,7 @@ sub add {
 sub commit {
   my ($message, $mode) = @_;
   if (empty_folder(".legit/$branch/index/*")) {
-    print "nothing to commit\n";
+    
   } else {
     # check for next commit folder
     my $commit_count = 0;
@@ -184,12 +201,12 @@ sub commit {
       $commit_count++;
     }
 
-    # create commit folder and move index to become the new folder
+    # create commit folder and copy index to new commit
     my $commit_folder = ".legit/$branch/$commit_count";
     make_path $commit_folder or die;
     copy_folder(".legit/$branch/index", $commit_folder);
     # record this commit
-    write_file(".legit/$branch/commit", "$commit_count $message\n");
+    prepend_file(".legit/$branch/commit", "$commit_count $message\n");
 
     print "Committed as commit $commit_count\n";
   }
