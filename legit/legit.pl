@@ -234,14 +234,19 @@ sub show {
 # show status
 sub status {
   # my $total = 
-  foreach my $file (glob "*") {
-    print "$file - ";
-    if (compare($file, ".legit/$branch/index/$file") == 0) {
-      print "same as repo";
-    } else {
-      print "file changed, ";
+  # there must be at least one commit
+  if (-d ".legit/$branch/0") {
+    foreach my $file (glob "*") {
+      print "$file - ";
+      if (compare($file, ".legit/$branch/index/$file") == 0) {
+        print "same as repo";
+      } else {
+        print "file changed, ";
+      }
+      print "\n";
     }
-    print "\n";
+  } else {
+    exit 1 if print "legit.pl: error: your repository does not have any commits yet\n";
   }
 }
 
