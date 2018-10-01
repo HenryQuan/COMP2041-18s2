@@ -51,7 +51,7 @@ if (@ARGV == 0) {
       commit($message, $mode);
     } elsif ($input =~ /log/) {
       # show past commits so basically cat commit
-      print_file(".legit/$branch/commit");
+      print_file(".legit/$branch/COMMIT");
     } elsif ($input =~ /show (.*)/) {
       my $input = $1;
       # check for correct amounts of input
@@ -103,6 +103,15 @@ sub prepend_file {
   open $f, '>', $path or die;
   print $f $message;
   print $f @old;
+  close $f;
+}
+
+# append to a file
+sub append_file {
+  my ($path, $message) = @_;
+  # append
+  open $f, '>>', $path or die;
+  print $f $message;
   close $f;
 }
 
@@ -166,7 +175,10 @@ sub init {
     exit 1 if print "legit.pl: error: .legit already exists\n";
   } else {
     make_path ".legit/$branch/index" or die;
-    make_file ".legit/$branch/commit";
+    # record all commits
+    make_file ".legit/$branch/COMMIT";
+    # record tracked files
+    make_file ".legit/$branch/TRACKED";
     exit 1 if print "Initialized empty legit repository in .legit\n";
   }
 }
@@ -176,11 +188,9 @@ sub add {
   my ($f) = @_;
   # check if file exists
   if (-e $f) {
-    # different copy
-    if (compare($f, ".legit/$branch/index/$f") != 0) {
-      print "Copy\n";
-      copy($f, ".legit/$branch/index");
-    }
+    # append to TRACKED
+    append_file(".legit/$branch/TRACKED", "$f ");
+    copy($f, ".legit/$branch/index");
   } else {
     exit 1 if print "legit.pl: error: can not open '$f'\n";
   }
@@ -204,7 +214,7 @@ sub commit {
     make_path $commit_folder or die;
     copy_folder(".legit/$branch/index", $commit_folder);
     # record this commit
-    prepend_file(".legit/$branch/commit", "$commit_count $message\n");
+    prepend_file(".legit/$branch/COMMIT", "$commit_count $message\n");
 
     print "Committed as commit $commit_count\n";
   }
