@@ -5,13 +5,19 @@
 |Date|Start|Stop|Activity|Comments|
 |:---|:---|:---|:---|:---|
 |16/09/18|20:25|20:50|Setting up|add readmes, website and create legit|
+|22/09/18|15:30|16:00|Japanese Quiz|Japanese is so hard|
+|22/09/18|9:00|21:00|Hackathon|We made an app in one day and it was probably the best teamwork ever at UNSW|
 |25/09/18|21:00|21:30|Learning about Git|watch the introduction video of git, start planning|
 |25/09/18|21:30|22:00|Adding test scripts|add empty scripts for future testing|
 |26/09/18|20:00|21:00|Subset 0|init and basic structure|
-|27/09/18|15:15|17:00|Subset 0|add|
-|27/09/18|21:00|22:00|Subset 0|commit, log, show|
-|27/09/18|22:00|23:00|Subset 0|fixing subset 0 bugs but did not work|
-|30/09/18|21:15|22:15|Subset 1|status and remove but none of them are working|
+|27/09/18|15:15|17:00|More Subset 0|add|
+|27/09/18|21:00|22:00|Even more Subset 0|commit, log, show|
+|27/09/18|22:00|23:00|Giving up Subset 0|fixing subset 0 bugs but did not work|
+|28/09/18|9:00|17:00|Studying COMP3331|5 hour lecture in one day, why not?|
+|29/09/18|Morning|Night|Resting|Watching Youtube and wasting my time so I did nothing|
+|30/09/18|21:15|22:15|Trying Subset 1|status and remove but none of them are working|
+|1/10/18|10:45|11:45|Fix error message|I failed two tests simply because of error messages and finally fixed it. I also have my lunch|
+|1/10/18|12:00|14:00|Subset 0 working!!|FINALLY!!! I need to write more tests and hopefully I could get 70%. Zain, you the best tutor ever so can you give me 70% >_<|
 ## Second
 |Date|Start|Stop|Activity|Comments|
 |:---|:---|:---|:---|:---|

@@ -225,7 +225,6 @@ sub add {
         write_file(".legit/$branch/CHANGED", "0");
       } elsif ($result > 0) {
         # There is a change and copy
-        print "diff\n";
         copy($f, ".legit/$branch/index");
         write_file(".legit/$branch/CHANGED", "1");
       }
