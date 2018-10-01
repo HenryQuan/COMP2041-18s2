@@ -85,25 +85,38 @@ if (@ARGV == 0) {
   }
 }
 
+# write to file
+sub write_file {
+  my ($path, $message) = @_;
+  # write to file
+  open $f, '>', $path or die;
+  print $f $message;
+  close $f;
+}
+
+# return all text from file
+sub read_file {
+  my ($path) = @_;
+  # write to file
+  open $f, '<', $path or die;
+  my @content = <$f>;
+  close $f;
+  return @content;
+}
+
 # create a new empty file
 sub make_file {
   my ($path) = @_;
-  open my $f, '>', $path or die;
-  close $f;
+  write_file($path, '');
 }
 
 # append content to file
 sub prepend_file {
   my ($path, $message) = @_;
   # save old text
-  open my $f, '<', $path or die;
-  my @old = <$f>;
-  close $f;
+  my @old = read_file($path);
   # prepend
-  open $f, '>', $path or die;
-  print $f $message;
-  print $f @old;
-  close $f;
+  write_file($path, $message . (join '', @old))
 }
 
 # append to a file
@@ -115,6 +128,25 @@ sub append_file {
   close $f;
 }
 
+# check if a file contains certain string
+sub file_contains {
+  my ($path, $text) = @_;
+  my $return = 0;
+  # see if file already contains $text
+  open my $f, '<', $path or die;
+  while (my $line = <$f>) {
+    if ($line =~ /$text/) {
+      # update flag to true
+      $return = 1;
+      last;
+    }
+  }
+  # be sure to close it
+  close $f;
+  return $return;
+}
+
+# cat a file
 sub print_file {
   my ($path) = @_;
   open my $f, '<', $path or die;
@@ -146,6 +178,7 @@ sub copy_folder {
   }
 }
 
+# check if legit folder exists
 sub legit_exist {
   return 1 if (-d '.legit');
   # stop if there is not legit folder
@@ -179,6 +212,8 @@ sub init {
     make_file ".legit/$branch/COMMIT";
     # record tracked files
     make_file ".legit/$branch/TRACKED";
+    # record whether files are changed
+    make_file ".legit/$branch/CHANGED";
     exit 1 if print "Initialized empty legit repository in .legit\n";
   }
 }
@@ -188,9 +223,17 @@ sub add {
   my ($f) = @_;
   # check if file exists
   if (-e $f) {
-    # append to TRACKED
-    append_file(".legit/$branch/TRACKED", "$f ");
-    copy($f, ".legit/$branch/index");
+    if (file_contains(".legit/$branch/TRACKED", "$f ")) {
+      # it is already being tracked so we have to check if there is any changes
+      if (compare("./legit/$branch/index/$f", $f) != 0) {
+        # There is a change and copy
+        copy($f, ".legit/$branch/index");
+      }
+    } else {
+      # append to TRACKED, a new file
+      append_file(".legit/$branch/TRACKED", "$f ");
+      copy($f, ".legit/$branch/index");
+    }
   } else {
     exit 1 if print "legit.pl: error: can not open '$f'\n";
   }
