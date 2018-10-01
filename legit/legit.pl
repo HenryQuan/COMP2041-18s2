@@ -69,7 +69,7 @@ if (@ARGV == 0) {
           # somehow it does not match
           exit 1 if print "usage: legit.pl show <commit>:<filename>\n";
         }
-        print "$folder\n";
+
         show($folder, $file);
       } else {
         # usage message
@@ -209,9 +209,8 @@ sub commit {
 # show commited file
 sub show {
   my ($folder, $name) = @_;
-  # for index, the message is a bit different
-  my $message = "commit '$folder'";
-  $message = "index" if ($folder eq "index");
+  # the messages are a bit different, some include quotes
+  my $message = 'index';
   if (-d ".legit/$branch/$folder") {
     # there is such folder so that we could print that file
     my $file = ".legit/$branch/$folder/$name";
@@ -219,10 +218,11 @@ sub show {
       # check if such file also exits before printing
       print_file($file);
     } else {
+      $message = "commit $folder" if ($folder ne 'index');
       exit 1 if print "legit.pl: error: '$name' not found in $message\n";
     }
   } else {
-    
+    $message = "commit '$folder'" if ($folder ne 'index');
     exit 1 if print "legit.pl: error: unknown $message\n";
   }
 }
