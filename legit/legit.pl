@@ -131,19 +131,13 @@ sub append_file {
 # check if a file contains certain string
 sub file_contains {
   my ($path, $text) = @_;
-  my $return = 0;
   # see if file already contains $text
-  open my $f, '<', $path or die;
-  while (my $line = <$f>) {
-    if ($line =~ /$text/) {
-      # update flag to true
-      $return = 1;
-      last;
-    }
+  my $file = join '', read_file($path);
+  if ($file =~ /$text/) {
+    return 1;
+  } else {
+    return 0;
   }
-  # be sure to close it
-  close $f;
-  return $return;
 }
 
 # cat a file
