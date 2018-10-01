@@ -176,7 +176,11 @@ sub add {
   my ($f) = @_;
   # check if file exists
   if (-e $f) {
-    copy($f, ".legit/$branch/index");
+    # different copy
+    if (compare($f, ".legit/$branch/index/$f") != 0) {
+      print "Copy\n";
+      copy($f, ".legit/$branch/index");
+    }
   } else {
     exit 1 if print "legit.pl: error: can not open '$f'\n";
   }
