@@ -216,7 +216,7 @@ sub show {
       # check if such file also exits before printing
       print_file($file);
     } else {
-      exit 1 if print "legit.pl: error: '$name' not found in $folder\n";
+      exit 1 if print "legit.pl: error: '$name' not found in commit $folder\n";
     }
   } else {
     my $message = "commit '$folder";
