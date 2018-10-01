@@ -207,7 +207,7 @@ sub init {
     # record tracked files
     make_file ".legit/$branch/TRACKED";
     # record whether files are changed
-    make_file ".legit/$branch/CHANGED";
+    write_file(".legit/$branch/CHANGED", "0");
     exit 1 if print "Initialized empty legit repository in .legit\n";
   }
 }
@@ -219,13 +219,20 @@ sub add {
   if (-e $f) {
     if (file_contains(".legit/$branch/TRACKED", "$f ")) {
       # it is already being tracked so we have to check if there is any changes
-      if (compare("./legit/$branch/index/$f", $f) != 0) {
+      my $result = compare(".legit/$branch/index/$f", $f);
+      if ($result == 0) {
+        # no changes
+        write_file(".legit/$branch/CHANGED", "0");
+      } elsif ($result > 0) {
         # There is a change and copy
+        print "diff\n";
         copy($f, ".legit/$branch/index");
+        write_file(".legit/$branch/CHANGED", "1");
       }
     } else {
       # append to TRACKED, a new file
       append_file(".legit/$branch/TRACKED", "$f ");
+      write_file(".legit/$branch/CHANGED", "1");
       copy($f, ".legit/$branch/index");
     }
   } else {
@@ -236,8 +243,9 @@ sub add {
 # commit files with mode
 sub commit {
   my ($message, $mode) = @_;
-  if (empty_folder(".legit/$branch/index/*")) {
-    
+  my @changed = read_file(".legit/$branch/CHANGED");
+  if (join('', @changed) eq "0") {
+    print "nothing to commit\n";
   } else {
     # check for next commit folder
     my $commit_count = 0;
@@ -254,6 +262,8 @@ sub commit {
     prepend_file(".legit/$branch/COMMIT", "$commit_count $message\n");
 
     print "Committed as commit $commit_count\n";
+    # no changes after commit
+    write_file(".legit/$branch/CHANGED", "0");
   }
 }
 
