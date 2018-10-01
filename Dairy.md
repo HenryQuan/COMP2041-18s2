@@ -10,8 +10,8 @@
 |26/09/18|20:00|21:00|Subset 0|init and basic structure|
 |27/09/18|15:15|17:00|Subset 0|add|
 |27/09/18|21:00|22:00|Subset 0|commit, log, show|
-|27/09/18|22:00|23:00|Subset 0|fixing subset 0 bugs|
-|27/09/18|21:15|23:00|Subset 0|status|
+|27/09/18|22:00|23:00|Subset 0|fixing subset 0 bugs but did not work|
+|30/09/18|21:15|22:15|Subset 1|status and remove but none of them are working|
 ## Second
 |Date|Start|Stop|Activity|Comments|
 |:---|:---|:---|:---|:---|
