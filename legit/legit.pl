@@ -39,10 +39,10 @@ if (@ARGV == 0) {
       my $message = "";
       my $mode = "normal"; # -a will trigger "all" mode
       # use argument numbers to check if input is valid
-      if ($input =~ /^-m/ && @ARGV == 3) {
-        $message = $ARGV[2];
-      } elsif ($input =~ /^-a -m/ && @ARGV == 4) {
-        $message = $ARGV[3];
+      if ($input =~ /-m ([^-m]+)$/) {
+        $message = $1;
+      } elsif ($input =~ /-a -m ([^-m]+)$/) {
+        $message = $1;
         $mode = "all";
       } else {
         exit 1 if printf "usage: legit.pl commit [-a] -m commit-message\n";
