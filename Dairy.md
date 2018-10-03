@@ -18,6 +18,8 @@
 |30/09/18|21:15|22:15|Trying Subset 1|status and remove but none of them are working|
 |1/10/18|10:45|11:45|Fix error message|I failed two tests simply because of error messages and finally fixed it. I also have my lunch|
 |1/10/18|12:00|14:00|Subset 0 working!!|FINALLY!!! I need to write more tests and hopefully I could get 70%. Zain, you the best tutor ever so can you give me 70% >_<|
+|2/10/18|Afternoon|23:00|Not feeling well|It was so cold and I got stomach cramp. I managed to finish the weekly test and could not take it anymore. My hot water bottle saved the day as usual.|
+|2/10/18|Afternoon|23:00|Not feeling well|It was so cold and I got stomach cramp. I managed to finish the weekly test and could not take it anymore. My hot water bottle saved the day as usual.|
 ## Second
 |Date|Start|Stop|Activity|Comments|
 |:---|:---|:---|:---|:---|
