@@ -1,4 +1,5 @@
-Please change it to a markdown file for better visual.
+Please change it to a markdown file (.md) for better visual.
+
 # Diary for Legit
 |Date|Start|Stop|Activity|Comments|
 |:---|:---|:---|:---|:---|

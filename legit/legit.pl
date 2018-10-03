@@ -80,8 +80,24 @@ if (@ARGV == 0) {
       }
     } elsif ($input =~ /^status/) {
       status();
-    } elsif ($input =~ /^rm (.*)/) {
-      my $input = $1;
+    } elsif ($input =~ /^rm/) {
+      if ($input =~ /rm (.+)/) {
+        # valid remove command
+        my @files = split ' ', $1 or die;
+        foreach $f (@files) {
+          remove($f);
+        }
+      } else {
+        # print error message
+        exit 1 if print "legit.pl: error: internal error usage: git rm [<options>] [--] <file>...
+
+    -n, --dry-run         dry run
+    -q, --quiet           do not list removed files
+    --cached              only remove from the index
+    -f, --force           override the up-to-date check
+    -r                    allow recursive removal
+    --ignore-unmatch      exit with a zero status even if nothing matched\n\n";
+      }
     } else {
       usage();
     }
@@ -330,5 +346,22 @@ sub status {
 
 # remove files from index or current directory
 sub remove {
-  
+  my ($f, $mode) = @_;
+  if (-e $f) {
+    my $index = compare($f, ".legit/$branch/index/$f");
+    my $last = last_commit();
+    my $commit = compare($f, ".legit/$branch/$last/$f");
+    # different messages
+    if ($index && $commit) {
+      exit 1 if print "\n";
+    } elsif ($index) {
+      exit 1 if print "\n";
+    } elsif ($commit) {
+      exit 1 if print "\n";
+    } else {
+      # remove both files
+    }
+  } else {
+    exit 1 if print "legit.pl: error: '$f' is not in the legit repository\n";
+  }
 }
