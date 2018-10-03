@@ -1,4 +1,4 @@
-# Dairy
+# Diary
 - [Legit](##legit)
 - [Second](##second)
 ## Legit

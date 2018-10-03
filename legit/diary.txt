@@ -1,5 +1,5 @@
 Please change it to a markdown file for better visual.
-# Dairy for Legit
+# Diary for Legit
 |Date|Start|Stop|Activity|Comments|
 |:---|:---|:---|:---|:---|
 |16/09/18|20:25|20:50|Setting up|add readmes, website and create legit|
