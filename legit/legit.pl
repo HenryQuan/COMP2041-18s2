@@ -10,12 +10,11 @@ if (@ARGV == 0) {
 } else {
   # add extra space to match regex
   my $input = join(' ', @ARGV) . ' ';
-
-  if ($input =~ /init/) {
+  if ($input =~ /^init/) {
     # init legit folder
     init();
   } elsif (legit_exist()) {
-    if ($input =~ /add/) {
+    if ($input =~ /^add/) {
       # .+ because there must be at least one file
       if ($input =~ /add (.+)/) {
         # valid add command
@@ -33,17 +32,18 @@ if (@ARGV == 0) {
         # print error message
         exit 1 if print "legit.pl: error: internal error Nothing specified, nothing added.\n";
       }
-    } elsif ($input =~ /commit (.*)/) {
+    } elsif ($input =~ /^commit (.*)/) {
       # save $1 for multiple if, after first if $1 will be gone
       my $input = $1;
       my $message = "";
       my $mode = "normal"; # -a will trigger "all" mode
-      # use argument numbers to check if input is valid
-      if ($input =~ /-m ([^-]+)$/) {
-        $message = $1;
-      } elsif ($input =~ /-a -m ([^-]+)$/) {
+
+      # -a -m first. Otherwise, -m will always match
+      if ($input =~ /-a -m ([^-]+)$/) {
         $message = $1;
         $mode = "all";
+      } elsif ($input =~ /-m ([^-]+)$/) {
+        $message = $1;
       } else {
         exit 1 if printf "usage: legit.pl commit [-a] -m commit-message\n";
       }
@@ -52,7 +52,7 @@ if (@ARGV == 0) {
         exit 1 if printf "usage: legit.pl commit [-a] -m commit-message\n";
       }
       commit($message, $mode);
-    } elsif ($input =~ /log/) {
+    } elsif ($input =~ /^log/) {
       # show past commits so basically cat commit
       print_file(".legit/$branch/COMMIT");
     } elsif ($input =~ /show (.*)/) {
@@ -78,9 +78,9 @@ if (@ARGV == 0) {
         # usage message
         exit 1 if print "usage: legit.pl show <commit>:<filename>\n";
       }
-    } elsif ($input =~ /status/) {
+    } elsif ($input =~ /^status/) {
       status();
-    } elsif ($input =~ /rm (.*)/) {
+    } elsif ($input =~ /^rm (.*)/) {
       my $input = $1;
     } else {
       usage();
@@ -220,7 +220,7 @@ sub init {
     # record tracked files
     make_file ".legit/$branch/TRACKED";
     # record whether files are changed
-    write_file(".legit/$branch/CHANGED", "0");
+    write_file(".legit/$branch/CHANGED", "");
     exit 1 if print "Initialized empty legit repository in .legit\n";
   }
 }
@@ -235,16 +235,16 @@ sub add {
       my $result = compare(".legit/$branch/index/$f", $f);
       if ($result == 0) {
         # no changes
-        write_file(".legit/$branch/CHANGED", "0");
+        append_file(".legit/$branch/CHANGED", "0");
       } elsif ($result > 0) {
         # There is a change and copy
         copy($f, ".legit/$branch/index");
-        write_file(".legit/$branch/CHANGED", "1");
+        append_file(".legit/$branch/CHANGED", "1");
       }
     } else {
       # append to TRACKED, a new file
       append_file(".legit/$branch/TRACKED", "$f ");
-      write_file(".legit/$branch/CHANGED", "1");
+      append_file(".legit/$branch/CHANGED", "1");
       copy($f, ".legit/$branch/index");
     }
   } else {
@@ -255,8 +255,19 @@ sub add {
 # commit files with mode
 sub commit {
   my ($message, $mode) = @_;
+
+  # add tracked file
+  if ($mode eq "all") {
+    my $tracked = join('', read_file(".legit/$branch/TRACKED"));
+    foreach my $file (split ' ', $tracked) {
+      # add them all
+      add($file);
+    }
+  }
+
+  # check whether there are any new updates
   my @changed = read_file(".legit/$branch/CHANGED");
-  if (join('', @changed) eq "0") {
+  if (join('', @changed) =~ /[^1]+/) {
     print "nothing to commit\n";
   } else {
     # check for next commit folder
@@ -271,8 +282,10 @@ sub commit {
 
     print "Committed as commit $commit_count\n";
     # no changes after commit
-    write_file(".legit/$branch/CHANGED", "0");
   }
+
+  # reset changed
+  #write_file(".legit/$branch/CHANGED", "");
 }
 
 # show commited file
