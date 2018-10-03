@@ -48,6 +48,10 @@ if (@ARGV == 0) {
         exit 1 if printf "usage: legit.pl commit [-a] -m commit-message\n";
       }
 
+      # it must not start with an argument  
+      if ($message =~ /^-/) {
+        exit 1 if printf "usage: legit.pl commit [-a] -m commit-message\n";
+      }
       commit($message, $mode);
     } elsif ($input =~ /log/) {
       # show past commits so basically cat commit
