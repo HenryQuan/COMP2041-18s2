@@ -179,6 +179,16 @@ sub legit_exist {
   exit 1 if print "legit.pl: error: no .legit directory containing legit repository exists\n";
 }
 
+# check for last commit folder
+sub last_commit {
+  my $commit_count = 0;
+  while (-d ".legit/$branch/$commit_count") {
+    # remember to use while to keep checking
+    $commit_count++;
+  }
+  return $commit_count;
+}
+
 # show usage
 sub usage {
   print "Usage: legit.pl <command> [<args>]
@@ -247,11 +257,7 @@ sub commit {
     print "nothing to commit\n";
   } else {
     # check for next commit folder
-    my $commit_count = 0;
-    while (-d ".legit/$branch/$commit_count") {
-      # remember to use while to keep checking
-      $commit_count++;
-    }
+    my $commit_count = last_commit();
 
     # create commit folder and copy index to new commit
     my $commit_folder = ".legit/$branch/$commit_count";
