@@ -267,7 +267,7 @@ sub commit {
 
   # check whether there are any new updates
   my @changed = read_file(".legit/$branch/CHANGED");
-  if (join('', @changed) =~ /[^1]+/) {
+  if (join('', @changed) =~ /^0+$/) {
     print "nothing to commit\n";
   } else {
     # check for next commit folder
@@ -285,7 +285,7 @@ sub commit {
   }
 
   # reset changed
-  #write_file(".legit/$branch/CHANGED", "");
+  write_file(".legit/$branch/CHANGED", "");
 }
 
 # show commited file
