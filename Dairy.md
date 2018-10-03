@@ -19,7 +19,7 @@
 |1/10/18|10:45|11:45|Fix error message|I failed two tests simply because of error messages and finally fixed it. I also have my lunch|
 |1/10/18|12:00|14:00|Subset 0 working!!|FINALLY!!! I need to write more tests and hopefully I could get 70%. Zain, you the best tutor ever so can you give me 70% >_<|
 |2/10/18|Afternoon|23:00|Not feeling well|It was so cold and I got stomach cramp. I managed to finish the weekly test and could not take it anymore. My hot water bottle saved the day as usual.|
-|2/10/18|Afternoon|23:00|Not feeling well|It was so cold and I got stomach cramp. I managed to finish the weekly test and could not take it anymore. My hot water bottle saved the day as usual.|
+|2/10/18|10:15|10:50|Allowing duplicate arguments|I feel so much better and will work on the details today. If I have time, I might do subset 1. So many checks, this feels like the first assignment of 1917 and there is always a way to break your program unless you spend lots of time on the input validation.|
 ## Second
 |Date|Start|Stop|Activity|Comments|
 |:---|:---|:---|:---|:---|
