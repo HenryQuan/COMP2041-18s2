@@ -34,15 +34,16 @@ if (@ARGV == 0) {
       }
     } elsif ($input =~ /^commit (.*)/) {
       # save $1 for multiple if, after first if $1 will be gone
-      my $input = $1;
+      my @input = (split ' ', $1)[-2..-1];
       my $message = "";
       my $mode = "normal"; # -a will trigger "all" mode
 
+      my $input = join ' ', @input;
       # -a -m first. Otherwise, -m will always match
-      if ($input =~ /-a -m ([^-]+)$/) {
+      if ($input =~ /-a -m ([^ ]+)$/) {
         $message = $1;
         $mode = "all";
-      } elsif ($input =~ /-m ([^-]+)$/) {
+      } elsif ($input =~ /-m ([^ ]+)$/) {
         $message = $1;
       } else {
         exit 1 if printf "usage: legit.pl commit [-a] -m commit-message\n";
@@ -51,6 +52,7 @@ if (@ARGV == 0) {
       if ($message =~ /^-/) {
         exit 1 if printf "usage: legit.pl commit [-a] -m commit-message\n";
       }
+
       commit($message, $mode);
     } elsif ($input =~ /^log/) {
       # show past commits so basically cat commit
