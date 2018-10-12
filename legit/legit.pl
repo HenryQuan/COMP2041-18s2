@@ -34,16 +34,17 @@ if (@ARGV == 0) {
       }
     } elsif ($input =~ /^commit (.*)/) {
       # save $1 for multiple if, after first if $1 will be gone
-      my @input = (split ' ', $1)[-2..-1];
+      my @input = (split ' ', $1)[-3..-1];
       my $message = "";
       my $mode = "normal"; # -a will trigger "all" mode
 
       my $input = join ' ', @input;
+      print $input;
       # -a -m first. Otherwise, -m will always match
-      if ($input =~ /-a -m ([^ ]+)$/) {
+      if ($input =~ /-a -m (.+)$/ && (@ARGV - 2) % 2 == 0) {
         $message = $1;
         $mode = "all";
-      } elsif ($input =~ /-m ([^ ]+)$/) {
+      } elsif ($input =~ /-m (.+)$/ && (@ARGV - 1) % 2 == 0) {
         $message = $1;
       } else {
         exit 1 if printf "usage: legit.pl commit [-a] -m commit-message\n";
